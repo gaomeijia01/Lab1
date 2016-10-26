@@ -1,295 +1,362 @@
-
 import java.util.Scanner;
-public class Expression {
-   public static void main(String [] args)
-   {
-	   Expression test = new Expression();
-	  
-	   System.out.println("ÇëÊäÈëÕıÈ·µÄ±í´ïÊ½£º");
-	   Scanner sc=new Scanner(System.in);
-	   String expre = sc.nextLine();
-	   String command =  new String();
-	   int f = test.expression(expre);
-	   
-	   while(f==0)
-	   { 
-		       
-			   System.out.println("ÇëÊäÈëÕıÈ·±í´ïÊ½£¡");
-			   expre = sc.nextLine();
-			   f = test.expression(expre);
-	   }
-	   System.out.println("ÇëÊäÈëÃüÁî£¨ÇóÖµ£º!simplify var1=num1 ... varn=numn£»  Çóµ¼£º !d/d var");
-	   command=sc.nextLine();
-	   while(command!=null){
-		   if(command.charAt(1)=='s')
-		   {
-			  System.out.println(test.simplify(expre,command));
-		   }
-		   else
-		   {
-			   test.derivative(expre,command);
-		   }
-		   System.out.println("ÊÇ·ñÏë¼ÌĞø¶ÔÊäÈë×Ö·û´®½øĞĞ²Ù×÷ £¿£¨Y or N£©");
-		   String str = sc.nextLine();
-		   if(str.charAt(0)=='Y' || str.charAt(0)=='y'){
-			   System.out.println("Çë¼ÌĞøÊäÈë²Ù×÷£º");
-			   command = sc.nextLine();
-		   }else {
-			   command = null;
-			   
-		   }
-		   
-	   }
-	   
-	   
-   }
-   private int  expression(String expre)
-   {
-	  int i,flag=1; 
-	  for(i=1;i<expre.length()-1;i++)
-	  {
-		  char ch = expre.charAt(i);
-		  if(!Character.isDigit(ch)&&!Character.isLetter(ch)&&(ch!='+')&&(ch!='*')){
-			  flag=0;
-			  break;
-		  }
-		  if(Character.isDigit(ch)){
-			  char ch1 = expre.charAt(i-1);
-			  char ch2 = expre.charAt(i+1);
-			  if((!Character.isDigit(ch1) && ch1 != '+' && ch1 !='*') || (!Character.isDigit(ch2) && ch2 != '+' && ch2 !='*')){
-				  flag=0;
-			  }
-		  }else if(Character.isLetter(ch)){
-			  char ch1 = expre.charAt(i-1);
-			  char ch2 = expre.charAt(i+1);
-			  if((ch1 != '+' && ch1 !='*') || (ch2 != '+' && ch2 !='*')){
-				  flag=0;
-			  }
-		  }else{
-			 char ch1 = expre.charAt(i-1);
-			 char ch2 = expre.charAt(i+1);
-			 if((!Character.isDigit(ch1)&&!Character.isLetter(ch1))||(!Character.isDigit(ch2)&&!Character.isLetter(ch2))){
-				 flag=0;
-			 }
-		  }
-	  }
-	  if(!Character.isDigit(expre.charAt(0)) && !Character.isLetter(expre.charAt(0))){
-			  flag = 0;
-		  }
-	  if(!Character.isDigit(expre.charAt(expre.length()-1)) && !Character.isLetter(expre.charAt(expre.length()-1))){
-		  flag = 0;
-	  }
-	  return flag;
-	  
-   }
 
-   private String simplify(String expre,String com)  //¶Ôº¯Êı½øĞĞ¼ò»¯£¬ÏÈ°Ñ±í´ïÊ½Í¨¹ı¡®+¡¯·Ö³É¼¸²¿·Ö£¬È»ºó·Ö±ğ¶ÔÃ¿²¿·Ö½øĞĞ²Ù×÷£»ÓÖ½«Ã¿²¿·ÖµÄ±äÁ¿ºÍÊı×Ö·Ö¿ª¶ÔÆä½øĞĞ¼ÆËãºóÔÙºÏ²¢Êä³ö
-   {
-	   int i,j,n=0,k;
-	   String ch = new String();
-	   
-	  
-	   for(i=0;i<com.length();i++)
-	   {
-		   String str=new String();
-		   String ch1=new String();
-		   if(com.charAt(i) == '=')
-		   {
-			   
-			   ch1=ch1+com.charAt(i-1);
-			   while(Character.isDigit(com.charAt(i+1))){
-				   ch=com.substring(i+1,i+2);
-				   str=str+ch;
-				   i=i+1;
-				   if(i==com.length()-1){
-					   break;
-				   }
-			   }
-			   expre=expre.replace(ch1, str);
-		     }
-	  }
-	   n=0;
-	  for(i=0;i<expre.length();i++)
-	  {
-		  if(expre.charAt(i)=='+'){
-			  n=n+1;
-		  }
-	  }
-	  String listn[] = new String[n+1];
-	  String listc[] = new String[n+1];
-	  int s=0;
-	  j=0;
-	  for(i=0;i<expre.length();i++)
-	  {
-		  if(expre.charAt(i)=='+'){
-			  listn[j] = expre.substring(s,i);
-			  j=j+1;
-			  s=i+1;
-		  }
-	  }
-	  listn[n] = expre.substring(s,expre.length()); 
-	  for(i=0;i<=n;i++){
-		  listc[i] = "*";
-	  }
-	  int num[ ]=new int[n+1];
-	  for(i=0;i<=n;i++){
-		  num[i]=1;
-	  }
-	
-	  for(i=0;i<=n;i++)
-	  {
-		  for(j=0;j<listn[i].length();j++)
-		  {
-			  if(Character.isDigit(listn[i].charAt(j))){
-				  for(k=j;k<listn[i].length();k++){
-					  if(listn[i].charAt(k) =='*'){
-						  break;
-					  }
-					  
-				  }
-				  
-				  String digit = listn[i].substring(j,k);
-				  num[i] = num[i]*(Integer.parseInt(digit));
-				  j=k-1;
-			  }
-			  else if(Character.isLetter(listn[i].charAt(j))){
-				  listc[i] = listc[i]+listn[i].substring(j,j+1)+"*";
-				  
-			  }
-			 
-		  }
-	  }
-	  for(i=0;i<n;i++){
-		  String str3 = listc[i];
-		  for(j=i+1;j<=n;j++)
-		  {
-			  if(listc[j] == str3){
-				  num[i]=num[i]+num[j];
-				  num[j]=0;
-				  listc[j] = null;
-			  }
-		  }
-	  }
-	  String expre1=new String();
-	  for(i=0;i<=n;i++){
-		  if(num[i]!=0){
-			  expre1=expre1+num[i]+listc[i]+"+";
-		  }
-	  }
-	  expre1=expre1.replace("*+", "+");
-	  if(expre1.charAt(expre1.length()-1)=='+'){
-		  expre1=expre1.substring(0,expre1.length()-1);
-	  }
-	  return expre1;
-   } 
-   private void derivative(String expre,String com){ //Ö»ÊÇ¶ÔÒÔÉÏº¯Êı½øĞĞµÄÒ»µã¸Ä±ä£¬ÏÈ°Ñ±í´ïÊ½½øĞĞ¼ò»¯£¬È»ºóÔÙ°ÑÆäÍ¨¹ıÏàÍ¬µÄ·½·¨·Ö³É¼¸²¿·Ö·Ö±ğ²Ù×÷£¬È»ºó½øĞĞ½µÃİÇóµ¼
-	   Expression test = new Expression();
-	   expre = test.simplify(expre, com);
-	   int i,j,n,flag=0,k;
-	   n=0;
-	   char ch='*';
-	   for(i=0;i<com.length()-1;i++){
-		   if(com.charAt(i)=='/'){
-			   ch = com.charAt(i+2);
-			   flag=1;
-			   for(j=0;j<=expre.length();j++){
-				   if(expre.charAt(j)==ch){
-					   flag=1;
-					   break;
-				   }
-			   }
-		   }
-	   }
-	   if(flag==0){
-		   System.out.println("ÇëÖØĞÂÊäÈë£¡");
-	   }else{
-		   for(i=0;i<expre.length();i++){
-				  if(expre.charAt(i)=='+'){
-					  n=n+1;
-				  }
-		  }
-		  String listn[] = new String[n+1];
-		  String listc[] = new String[n+1];
-		  for(i=0;i<=n;i++){
-			  listc[i]="";
-		  }
-		  int s=0;
-		  j=0;
-		  for(i=0;i<expre.length();i++)
-		  {
-			  if(expre.charAt(i)=='+'){
-				  listn[j] = expre.substring(s,i);
-				  j=j+1;
-				  s=i+1;
-			  }
-		  }
-		  listn[n] = expre.substring(s,expre.length()); 
-		  int num[ ]=new int[n+1];
-		  
-		  for(i=0;i<=n;i++){
-			  num[i]=1;
-		  }
-		  int sum[ ]=new int[n+1];
-		  for(i=0;i<=n;i++)
-		  {
-			  sum[i]=0;
-			  for(j=0;j<listn[i].length();j++){
-				  if(listn[i].charAt(j)==ch){
-					  sum[i]=sum[i]+1;           //¼ÆËãÃ¿×é±äÁ¿µÄ´ÎÃİ
-				  }
-			  }
-			  for(j=0;j<listn[i].length();j++)
-			  {
-				  if(Character.isDigit(listn[i].charAt(j))){
-					  for(k=j;k<listn[i].length();k++){
-						  if(listn[i].charAt(k) =='*'){
-							  break;
-						  }
-						  
-					  }
-					  
-					  String digit = listn[i].substring(j,k);
-					  num[i] = num[i]*(Integer.parseInt(digit));
-					  j=k-1;
-				  }
-				  
-				  else if(Character.isLetter(listn[i].charAt(j))){
-					  if(listn[i].charAt(j)!=ch){
-						  listc[i] = listc[i]+listn[i].substring(j,j+1)+"*";
-					  }
-					  
-				  }
-				  
-			  }
-			  if(sum[i]!=0 && sum[i]!=1){
-					 for(j=1;j<sum[i];j++){
-						 listc[i]=listc[i]+"*"+ch+"*";
-						
-					 }
-					 num[i]=num[i]*sum[i];
-				 }else if(sum[i]==0){
-					 listc[i]=null;
-					 num[i]=0;
-				 }else{
-					 listc[i]=listc[i];
-				 }
-				 
-		  }
-		  String expre1=new String();
-		  for(i=0;i<=n;i++){
-			  if(num[i]!=0){
-				  expre1=expre1+num[i]+listc[i]+"+";
-			  }
-		  }
-		  expre1=expre1.replace("*+", "+");
-		  if(expre1.charAt(expre1.length()-1)=='+'){
-			  expre1=expre1.substring(0,expre1.length()-1);
-		  }
-		  System.out.println(expre1);
-		
-	   }
-	   
-		   
-   }
-   
+/**
+ * .
+ * æ·»åŠ æ³¨é‡Š
+ */
+public class Expression {
+    /**
+     * @param args ä¸»æ–¹æ³•å­—ç¬¦ä¸²æ•°ç»„
+     */
+    public static void main(final String[] args) {
+        final Expression test = new Expression();
+        System.out.println("è¯·è¾“å…¥æ­£ç¡®çš„è¡¨è¾¾å¼ï¼š");
+        final Scanner source = new Scanner(System.in, "GBK");
+        String expre = source.nextLine();
+        String command;
+        int f = test.expression(expre);
+        while (f == 0) {
+
+            System.out.println("è¯·è¾“å…¥æ­£ç¡®è¡¨è¾¾å¼ï¼");
+            expre = source.nextLine();
+            f = test.expression(expre);
+        }
+        System.out.println("è¯·è¾“å…¥å‘½ä»¤ï¼ˆæ±‚å€¼ï¼š!simplify var1=num1 ... varn=numnï¼›"
+                + "  æ±‚å¯¼ï¼š !d/d var");
+        command = source.nextLine();
+        while (command != null) {
+            if (command.charAt(1) == Constant.SYMBOL_S0) {
+                System.out.println(test.simplify(expre, command));
+            } else {
+                test.derivative(expre, command);
+            }
+            System.out.println("æ˜¯å¦æƒ³ç»§ç»­å¯¹è¾“å…¥å­—ç¬¦ä¸²è¿›è¡Œæ“ä½œ ï¼Ÿï¼ˆY or Nï¼‰");
+            final String str = source.nextLine();
+            if (str.charAt(0) == 'Y' || str.charAt(0) == 'y') {
+                System.out.println("è¯·ç»§ç»­è¾“å…¥æ“ä½œï¼š");
+                command = source.nextLine();
+            } else {
+                command = null;
+            }
+
+        }
+
+
+    }
+
+    /**
+     * @param expre ï¼ˆå¡«å†™å‚æ•°å«ä¹‰ï¼‰
+     * @return ï¼ˆå¡«å†™è¿”å›å€¼ï¼‰
+     */
+    private int expression(final String expre) {
+        int flag = 1;
+        for (int i = 1; i < expre.length() - 1; i++) {
+            final char ch = expre.charAt(i);
+            if (!Character.isDigit(ch) && !Character.isLetter(ch) && ch != '+'
+                    && ch != '*') {
+                flag = 0;
+                break;
+            }
+            if (Character.isDigit(ch)) {
+                final char ch1 = expre.charAt(i - 1);
+                final char ch2 = expre.charAt(i + 1);
+                if (!Character.isDigit(ch1) && ch1 != '+' && ch1 != '*'
+                        || !Character.isDigit(ch2) && ch2 != '+'
+                        && ch2 != '*') {
+                    flag = 0;
+                }
+            } else if (Character.isLetter(ch)) {
+                final char ch1 = expre.charAt(i - 1);
+                final char ch2 = expre.charAt(i + 1);
+                if (ch1 != '+' && ch1 != '*' || ch2 != '+' && ch2 != '*') {
+                    flag = 0;
+                }
+            } else {
+                final char ch1 = expre.charAt(i - 1);
+                final char ch2 = expre.charAt(i + 1);
+                if (!Character.isDigit(ch1) && !Character.isLetter(ch1)
+                        || !Character.isDigit(ch2)
+                        && !Character.isLetter(ch2)) {
+                    flag = 0;
+                }
+            }
+        }
+        if (!Character.isDigit(expre.charAt(0))
+                && !Character.isLetter(expre.charAt(0))) {
+            flag = 0;
+        }
+        if (!Character.isDigit(expre.charAt(expre.length() - 1))
+                && !Character.isLetter(expre.charAt(expre.length() - 1))) {
+            flag = 0;
+        }
+        return flag;
+
+    }
+
+    /**.
+     * å‡½æ•°è¿›è¡Œç®€åŒ–ï¼Œå…ˆæŠŠè¡¨è¾¾å¼é€šè¿‡â€˜+â€™åˆ†æˆå‡ éƒ¨åˆ†ï¼Œç„¶ååˆ†åˆ«å¯¹æ¯éƒ¨åˆ†è¿›è¡Œæ“ä½œï¼›
+     * åˆå°†æ¯éƒ¨åˆ†çš„å˜é‡å’Œæ•°å­—åˆ†å¼€å¯¹å…¶è¿›è¡Œè®¡ç®—åå†åˆå¹¶è¾“å‡º
+     * @param expre (å¡«å†™å‚æ•°å«ä¹‰)
+     * @param com   (å¡«å†™å‚æ•°å«ä¹‰)
+     * @return (å¡«å†™è¿”å›å€¼)
+     */
+    private String simplify(final String expre, final String com) {
+        int j,
+                n,
+                k;
+        final StringBuffer ch = new StringBuffer();
+        String newExpre = expre;
+        for (int i = 0; i < com.length(); i++) {
+            final StringBuffer str = new StringBuffer();
+            final StringBuffer ch1 = new StringBuffer();
+            if (com.charAt(i) == Constant.SYMBOL_EQ) {
+                ch1.append(com.charAt(i - 1));
+                while (Character.isDigit(com.charAt(i + 1))) {
+                    ch.append(com.substring(i + 1, i + 2));
+                    str.append(ch);
+                    ch.delete(0, 1);
+                    i += 1;
+
+                    if (i == com.length() - 1) {
+                        break;
+                    }
+                }
+                newExpre = newExpre.replace(ch1, str);
+            }
+        }
+        n = 0;
+        for (int i = 0; i < newExpre.length(); i++) {
+            if (newExpre.charAt(i) == Constant.SYMBOL_PLUS) {
+                n = n + 1;
+            }
+        }
+        String[] listn = new String[n + 1];
+        String[] listc = new String[n + 1];
+        int s = 0;
+        j = 0;
+        for (int i = 0; i < newExpre.length(); i++) {
+            if (newExpre.charAt(i) == Constant.SYMBOL_PLUS) {
+                listn[j] = newExpre.substring(s, i);
+                j = j + 1;
+                s = i + 1;
+            }
+        }
+        listn[n] = newExpre.substring(s, newExpre.length());
+        for (int i = 0; i <= n; i++) {
+            listc[i] = "*";
+        }
+        int[] num = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            num[i] = 1;
+        }
+
+        for (int i = 0; i <= n; i++) {
+            for (j = 0; j < listn[i].length(); j++) {
+                if (Character.isDigit(listn[i].charAt(j))) {
+                    for (k = j; k < listn[i].length(); k++) {
+                        if (listn[i].charAt(k) == Constant.SYMBOL_MUL) {
+                            break;
+                        }
+
+                    }
+
+                    final String digit = listn[i].substring(j, k);
+                    num[i] = num[i] * (Integer.parseInt(digit));
+                    j = k - 1;
+                } else if (Character.isLetter(listn[i].charAt(j))) {
+                    final StringBuffer tmp = new StringBuffer(listc[i]);
+                    tmp.append(listn[i].substring(j, j + 1)).append(
+                            Constant.SYMBOL_MUL);
+                    listc[i] = String.valueOf(tmp);
+                }
+
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            final String str3 = listc[i];
+            for (j = i + 1; j <= n; j++) {
+                if (listc[j] == null || listc[j].equals(str3)) {
+                    num[i] = num[i] + num[j];
+                    num[j] = 0;
+                    listc[j] = null;
+                }
+            }
+        }
+        String expre1 = "";
+        for (int i = 0; i <= n; i++) {
+            if (num[i] != 0) {
+                final StringBuffer tmp = new StringBuffer(expre1);
+                tmp.append(num[i]).append(listc[i]).append(
+                        Constant.SYMBOL_PLUS);
+                expre1 = String.valueOf(tmp);
+            }
+        }
+        expre1 = expre1.replace("*+", "+");
+        if (expre1.charAt(expre1.length() - 1) == Constant.SYMBOL_PLUS) {
+            expre1 = expre1.substring(0, expre1.length() - 1);
+        }
+        return expre1;
+    }
+
+    /**.
+     * åªæ˜¯å¯¹ä»¥ä¸Šå‡½æ•°è¿›è¡Œçš„ä¸€ç‚¹æ”¹å˜ï¼Œå…ˆæŠŠè¡¨è¾¾å¼è¿›è¡Œç®€åŒ–ï¼Œ
+     * ç„¶åå†æŠŠå…¶é€šè¿‡ç›¸åŒçš„æ–¹æ³•åˆ†æˆå‡ éƒ¨åˆ†åˆ†åˆ«æ“ä½œï¼Œç„¶åè¿›è¡Œé™å¹‚æ±‚å¯¼
+     *
+     * @param expre (å¡«å†™å‚æ•°å«ä¹‰)
+     * @param com   (å¡«å†™å‚æ•°å«ä¹‰)
+     */
+    private void derivative(final String expre, final String com) {
+        final Expression test = new Expression();
+        final String newExpre = test.simplify(expre, com);
+        int i,
+                j,
+                k,
+                n = 0,
+                flag = 0;
+        char ch = '*';
+        for (i = 0; i < com.length() - 1; i++) {
+            if (com.charAt(i) == Constant.SYMBOL_SLASH) {
+                ch = com.charAt(i + 2);
+                flag = 1;
+                for (j = 0; j <= newExpre.length(); j++) {
+                    if (newExpre.charAt(j) == ch) {
+                        flag = 1;
+                        break;
+                    }
+                }
+            }
+        }
+        if (flag == 0) {
+            System.out.println("è¯·é‡æ–°è¾“å…¥ï¼");
+        } else {
+            for (i = 0; i < newExpre.length(); i++) {
+                if (newExpre.charAt(i) == Constant.SYMBOL_PLUS) {
+                    n = n + 1;
+                }
+            }
+            String[] listn = new String[n + 1];
+            String[] listc = new String[n + 1];
+            for (i = 0; i <= n; i++) {
+                listc[i] = "";
+            }
+            int s = 0;
+            j = 0;
+            for (i = 0; i < newExpre.length(); i++) {
+                if (newExpre.charAt(i) == Constant.SYMBOL_PLUS) {
+                    listn[j] = newExpre.substring(s, i);
+                    j = j + 1;
+                    s = i + 1;
+                }
+            }
+            listn[n] = newExpre.substring(s, newExpre.length());
+            int[] num = new int[n + 1];
+
+            for (i = 0; i <= n; i++) {
+                num[i] = 1;
+            }
+            int[] sum = new int[n + 1];
+            for (i = 0; i <= n; i++) {
+                sum[i] = 0;
+                for (j = 0; j < listn[i].length(); j++) {
+                    if (listn[i].charAt(j) == ch) {
+                        sum[i] = sum[i] + 1;           //è®¡ç®—æ¯ç»„å˜é‡çš„æ¬¡å¹‚
+                    }
+                }
+                for (j = 0; j < listn[i].length(); j++) {
+                    if (Character.isDigit(listn[i].charAt(j))) {
+                        for (k = j; k < listn[i].length(); k++) {
+                            if (listn[i].charAt(k) == Constant.SYMBOL_MUL) {
+                                break;
+                            }
+
+                        }
+
+                        final String digit = listn[i].substring(j, k);
+                        num[i] = num[i] * (Integer.parseInt(digit));
+                        j = k - 1;
+                    } else if (Character.isLetter(listn[i].charAt(j))
+                            && listn[i].charAt(j) != ch) {
+                        final StringBuffer tmp = new StringBuffer(listc[i]);
+                        tmp.append(listn[i].substring(j, j + 1)).append(
+                                Constant.SYMBOL_MUL);
+                        listc[i] = String.valueOf(tmp);
+                    }
+
+                }
+                if (sum[i] == 0) {
+                    listc[i] = null;
+                    num[i] = 0;
+                } else if (sum[i] != 0 && sum[i] != 1) {
+                    for (j = 1; j < sum[i]; j++) {
+                        final StringBuffer tmp = new StringBuffer(listc[i]);
+                        tmp.append(Constant.SYMBOL_MUL).append(ch).append(
+                                Constant.SYMBOL_MUL);
+                        listc[i] = String.valueOf(tmp);
+                    }
+                    num[i] = num[i] * sum[i];
+                }
+            }
+            String expre1 = "";
+            for (i = 0; i <= n; i++) {
+                if (num[i] != 0) {
+                    final StringBuffer tmp = new StringBuffer(expre1);
+                    tmp.append(num[i]).append(listc[i]).append(
+                            Constant.SYMBOL_PLUS);
+                    expre1 = String.valueOf(tmp);
+                }
+            }
+            expre1 = expre1.replace("*+", "+");
+            if (expre1.charAt(expre1.length() - 1) == Constant.SYMBOL_PLUS) {
+                expre1 = expre1.substring(0, expre1.length() - 1);
+            }
+            System.out.println(expre1);
+
+        }
+
+
+    }
+
+}
+
+/**.
+ * å¸¸é‡
+ */
+final class Constant {
+
+    /**
+     * .
+     * å­—ç¬¦'s'
+     */
+    public static final char SYMBOL_S0 = 's';
+
+    /**
+     * .
+     * å­—ç¬¦'='
+     */
+    public static final char SYMBOL_EQ = '=';
+
+    /**
+     * .
+     * å­—ç¬¦'+'
+     */
+    public static final char SYMBOL_PLUS = '+';
+
+    /**
+     * .
+     * å­—ç¬¦'*'
+     */
+    public static final char SYMBOL_MUL = '*';
+
+    /**
+     * .
+     * å­—ç¬¦'/'
+     */
+    public static final char SYMBOL_SLASH = '/';
+
+    /**
+     * .
+     * éšè—å·¥å…·ç±»çš„æ„é€ å‡½æ•°
+     */
+    private Constant() {
+    }
 }
